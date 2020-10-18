@@ -1,3 +1,8 @@
-APPLICATIONS: []
-ROUTES: {}
+APPLICATIONS:
+- todolist
 MIDDLEWARE: {}
+ROUTES:
+  todolist:
+    prefix: /todolist
+    tags:
+    - todolist
