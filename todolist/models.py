@@ -1,4 +1,5 @@
 from joey.db import Model
+from pydantic import BaseModel
 import orm
 
 class User(Model):
@@ -8,7 +9,7 @@ class User(Model):
 
 class TodoList(Model):
     id = orm.Integer(primary_key=True)
-    owner = orm.ForeignKey(User)
+    owner = orm.ForeignKey(User, allow_null=True)
 
 class Item(Model):
     id = orm.Integer(primary_key=True)
