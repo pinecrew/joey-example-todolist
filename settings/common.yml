@@ -3,6 +3,6 @@ APPLICATIONS:
 MIDDLEWARE: {}
 ROUTES:
   todolist:
-    prefix: /todolist
+    prefix: ''
     tags:
     - todolist
