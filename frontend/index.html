@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<meta charset="UTF-8"> 
+<html>
+<head>
+  <title>Vue ToDo List Demo App</title>
+  <script src="static/js/vue.global.js"></script>
+  <script src="static/js/axios.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <div id="todo-list-app">
+      <ol>
+        <todo-item v-for="item in items" v-bind:todo="item" v-bind:key="item.id"></todo-item>
+      </ol>
+    </div>
+  </div>
+  <script src="static/js/base.js"></script>
+</body>
+</html>
