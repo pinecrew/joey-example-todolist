@@ -1,69 +1,37 @@
 from fastapi import APIRouter
 from typing import List, Optional
-from pydantic import BaseModel
+
 from .models import TodoList, Item
+from .serializers import TodoListSerializer, TodoListCreate, ItemSerializer, ItemCreate
 
 router = APIRouter()
 
 
-class TodoListResponse(BaseModel):
-    id: int
-    owner: Optional[int] = None
-
-
-@router.get('/lists', response_model=List[TodoListResponse])
+@router.get('/lists', response_model=List[TodoListSerializer], response_model_by_alias=False)
 async def lists():
-    data = await TodoList.objects.all()
-    return ({'id': i.id, 'owner': i.owner.id} for i in data)
+    return await TodoList.objects.all()
 
 
-class TodoListCreate(BaseModel):
-    owner: Optional[int] = None
-
-
-@router.post('/lists', response_model=TodoListResponse)
+@router.post('/lists', response_model=TodoListSerializer, response_model_by_alias=False)
 async def new_list(lst: TodoListCreate):
-    data = dict(lst)
-    if not data['owner']:
-        data.pop('owner')
-    l = await TodoList.objects.create(**data)
-    return {'id': l.id, 'owner': l.owner.id}
+    return await lst.save()
 
 
-@router.get('/lists/{list_id}', response_model=TodoListResponse)
+@router.get('/lists/{list_id}', response_model=TodoListSerializer, response_model_by_alias=False)
 async def list_(list_id: int):
-    l = await TodoList.objects.get(id=list_id)
-    return {'id': l.id, 'owner': l.owner.id}
+    return await TodoList.objects.get(id=list_id)
 
 
-class ItemResponse(BaseModel):
-    id: int
-    list: int
-    value: str
-    status: bool
-
-
-@router.get('/lists/{list_id}/items', response_model=List[ItemResponse])
+@router.get('/lists/{list_id}/items', response_model=List[ItemSerializer], response_model_by_alias=False)
 async def items(list_id: int):
-    data = await Item.objects.filter(todolist=list_id).all()
-    return ({'id': i.id, 'list': i.todolist.id, 'value': i.value, 'status': i.status} for i in data)
+    return await Item.objects.filter(todolist=list_id).all()
 
 
-@router.get('/items/{item_id}', response_model=ItemResponse)
+@router.get('/items/{item_id}', response_model=ItemSerializer, response_model_by_alias=False)
 async def item(item_id: int):
-    i = await Item.objects.get(id=item_id)
-    return {'id': i.id, 'list': i.todolist.id, 'value': i.value, 'status': i.status}
+    return await Item.objects.get(id=item_id)
 
 
-class ItemCreate(BaseModel):
-    todolist: int
-    value: str
-    status: Optional[bool] = False
-
-
-@router.post('/items/', response_model=ItemResponse)
+@router.post('/items/', response_model=ItemSerializer, response_model_by_alias=False)
 async def new_item(item: ItemCreate):
-    data = dict(item)
-    data['todolist'] = await TodoList.objects.get(id=data['todolist'])
-    i = await Item.objects.create(**data)
-    return {'id': i.id, 'list': i.todolist.id, 'value': i.value, 'status': i.status}
+    return await item.save()
