@@ -13,6 +13,7 @@ jedi = "*"
 joey = "*"
 uvicorn = "*"
 aiosqlite = "*"
+aiofiles = "*"
 
 [requires]
 python_version = "3.8"
