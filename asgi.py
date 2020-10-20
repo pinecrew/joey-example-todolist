@@ -7,4 +7,4 @@ from fastapi.staticfiles import StaticFiles
 app = Application(settings)
 
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_credentials=True, allow_methods=['*'], allow_headers=['*'])
-app.mount("/", StaticFiles(directory="frontend"), name="frontend")
+app.mount("/static", StaticFiles(directory="frontend/static"), name="static")

@@ -1,10 +1,19 @@
-from fastapi import APIRouter
 from typing import List, Optional
+
+import aiofiles
+from fastapi import APIRouter
+from fastapi.responses import HTMLResponse
 
 from .models import TodoList, Item
 from .serializers import TodoListSerializer, TodoListCreate, ItemSerializer, ItemCreate
 
 router = APIRouter()
+
+
+@router.get('/')
+async def index():
+    async with aiofiles.open('frontend/index.html', mode='r') as f:
+        return HTMLResponse(await f.read())
 
 
 @router.get('/lists', response_model=List[TodoListSerializer], response_model_by_alias=False)
