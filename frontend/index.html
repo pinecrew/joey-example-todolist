@@ -3,15 +3,22 @@
 <html>
 <head>
   <title>Vue ToDo List Demo App</title>
+  <link rel="stylesheet" href="static/css/style.css">
   <script src="static/js/vue.global.js"></script>
   <script src="static/js/axios.min.js"></script>
 </head>
 <body>
   <div id="app">
-    <div id="todo-list-app">
-      <ol>
-        <todo-item v-for="item in items" v-bind:todo="item" v-bind:key="item.id"></todo-item>
-      </ol>
+    <div id="todo-list-app" class="block-center">
+      <div v-if="items.length > 0">
+        <h1 class="text-center">Todo List</h1>
+        <ol class="todo-center">
+          <todo-item v-for="item in items" v-bind:todo="item" v-bind:key="item.id"></todo-item>
+        </ol>
+      </div>
+      <div v-else>
+        <h1 class="text-center">Todolist is empty</h1>
+      </div>
     </div>
   </div>
   <script src="static/js/base.js"></script>

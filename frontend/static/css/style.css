@@ -1,0 +1,13 @@
+.block-center {
+    width: 50%;
+    margin: auto;
+}
+
+.text-center {
+    justify-content: center;
+    display: flex;
+}
+
+.todo-center {
+    background-color: aliceblue;
+}
