@@ -2,23 +2,24 @@
 <meta charset="UTF-8"> 
 <html>
 <head>
-  <title>Vue ToDo List Demo App</title>
+  <title>TodoList</title>
   <link rel="stylesheet" href="static/css/style.css">
   <script src="static/js/vue.global.js"></script>
   <script src="static/js/axios.min.js"></script>
 </head>
 <body>
-  <div id="app">
-    <div id="todo-list-app" class="block-center">
-      <div v-if="items.length > 0">
-        <h1 class="text-center">Todo List</h1>
-        <ol class="todo-center">
-          <todo-item v-for="item in items" v-bind:todo="item" v-bind:key="item.id"></todo-item>
-        </ol>
+  <div id="todo-list-app" class="block-center">
+    <div v-if="todo_lists.length > 0">
+      <h1 class="text-center">Todo Lists</h1>
+      <div class="todo-list">
+        <todo-lists v-for="list in todo_lists" :list="list" :key="list.id"></todo-lists>
       </div>
-      <div v-else>
-        <h1 class="text-center">Todolist is empty</h1>
+      <div class="todo-list">
+        <todo-items v-for="item in todo_items" :item="item" :key="item.id"></todo-items>
       </div>
+    </div>
+    <div v-else>
+      <h1 class="text-center">Todo Lists is empty</h1>
     </div>
   </div>
   <script src="static/js/base.js"></script>
