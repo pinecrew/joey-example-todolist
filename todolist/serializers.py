@@ -24,10 +24,12 @@ class Serializer(BaseModel, metaclass=ModelMetaclass):
 
 class TodoListSerializer(Serializer):
     id: int
+    title: str
     owner: Optional[int] = Field(alias='owner.id')
 
 
 class TodoListCreate(Serializer):
+    title: str
     owner: Optional[int] = None
 
     async def save(self):

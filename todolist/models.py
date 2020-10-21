@@ -9,6 +9,7 @@ class User(Model):
 
 class TodoList(Model):
     id = orm.Integer(primary_key=True)
+    title = orm.String(max_length=100, default='')
     owner = orm.ForeignKey(User, allow_null=True)
 
 class Item(Model):

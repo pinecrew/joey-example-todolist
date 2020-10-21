@@ -19,7 +19,7 @@ app.component('todo-lists', {
     }
   },
   template: `
-    <p @click="update(list.id)">#{{ list.id }} by {{ list.owner ? list.owner : "unknown" }}</p>
+    <p @click="update(list.id)">#{{ list.id }} {{ list.title }} by {{ list.owner ? list.owner : "unknown" }}</p>
   `,
   props: ['list'],
 })
