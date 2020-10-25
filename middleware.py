@@ -62,13 +62,14 @@ class SessionMiddleware:
         connection = HTTPConnection(scope)
         initial_session_was_empty = True
 
-        session_data = connection.cookies.get(self.session_cookie, 'eyJ1c2VyX2lkIjogMX0=')
+        session_data = connection.cookies.get(self.session_cookie)
         if session_data:
             session_data = self.backend.decode(session_data)
             if session_data:
                 initial_session_was_empty = False
+        else:
+            session_data = {}
         scope['session'] = session_data
-        print(scope)
 
         async def send_wrapper(message: Message) -> None:
             if message['type'] == 'http.response.start':

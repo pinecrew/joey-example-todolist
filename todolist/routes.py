@@ -1,13 +1,37 @@
 from typing import List, Optional
 
 import aiofiles
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
+from pydantic import BaseModel
 
-from .models import TodoList, Item
+from .models import TodoList, Item, User
 from .serializers import TodoListSerializer, TodoListCreate, ItemSerializer, ItemCreate
+from .auth import login as auth_login, logout as auth_logout
 
 router = APIRouter()
+
+
+class Credentials(BaseModel):
+    login: str
+    password: str
+
+
+@router.post('/login')
+async def login(credentials: Credentials, request: Request):
+    try:
+        user = await User.objects.get(name=credentials.login)
+        if user.password == credentials.password:
+            auth_login(request.scope, user)
+            return {'name': user.name}
+    except Exception:
+        pass
+    return {}
+
+
+@router.get('/logout')
+async def logout(request: Request):
+    auth_logout(request.scope)
 
 
 @router.get('/')
