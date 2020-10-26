@@ -46,7 +46,10 @@ async def lists():
 
 
 @router.post('/lists', response_model=TodoListSerializer, response_model_by_alias=False)
-async def new_list(lst: TodoListCreate):
+async def new_list(lst: TodoListCreate, request: Request):
+    user = request.scope['user']
+    if lst.owner is None and user:
+        lst.owner = user.id
     return await lst.save()
 
 
