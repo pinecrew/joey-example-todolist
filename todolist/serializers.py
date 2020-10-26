@@ -35,7 +35,7 @@ class TodoListCreate(Serializer):
     async def save(self):
         validated_data = self.dict()
         if self.owner:
-            validated_data['owner'] = User.objects.get(id=self.owner)
+            validated_data['owner'] = await User.objects.get(id=self.owner)
         else:
             del validated_data['owner']
         return await TodoList.objects.create(**validated_data)
