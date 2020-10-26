@@ -33,8 +33,10 @@ class BaseSessionBackend:
         return base64.b64encode(json.dumps(session).encode()).decode()
 
     def decode(self, data: str) -> dict:
-        return json.loads(base64.b64decode(data.encode()))
-
+        try:
+            return json.loads(base64.b64decode(data.encode()))
+        except Exception:
+            return {}
 
 class SessionMiddleware:
     def __init__(
