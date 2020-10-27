@@ -12,3 +12,8 @@
     display: inline-block;
     width: 50%;
 }
+
+.hello-msg {
+    display: inline-block;
+    margin-left: 1em;
+}

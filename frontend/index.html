@@ -9,6 +9,15 @@
 </head>
 <body>
   <div id="todo-list-app" class="block-center">
+    <div v-if="username.length == 0">
+      <input type="text" placeholder="Enter username" name="login" v-model="login" required>
+      <input type="text" placeholder="Enter password" name="password" v-model="password" required>
+      <button @click="process_login">Login</button>
+    </div>
+    <div v-else>
+      <button @click="process_logout">Logout</button>
+      <h1 class="hello-msg">Hello, {{ username }}!</h1>
+    </div>
     <div v-if="todo_lists.length > 0">
       <h1 class="text-center">Todo Lists</h1>
       <div class="todo-list">
