@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 import aiofiles
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
@@ -41,21 +41,26 @@ async def index():
 
 
 @router.get('/lists', response_model=List[TodoListSerializer], response_model_by_alias=False)
-async def lists():
-    return await TodoList.objects.all()
+async def lists(request: Request):
+    user = request.scope.get('user')
+    return await TodoList.objects.filter(owner=user).all()
 
 
 @router.post('/lists', response_model=TodoListSerializer, response_model_by_alias=False)
 async def new_list(lst: TodoListCreate, request: Request):
-    user = request.scope['user']
+    user = request.scope.get('user')
     if lst.owner is None and user:
         lst.owner = user.id
     return await lst.save()
 
 
 @router.get('/lists/{list_id}', response_model=TodoListSerializer, response_model_by_alias=False)
-async def list_(list_id: int):
-    return await TodoList.objects.get(id=list_id)
+async def list_(list_id: int, request: Request):
+    user = request.scope.get('user')
+    try:
+        return await TodoList.objects.get(id=list_id, owner=user)
+    except TodoList.DoesNotExist:
+        raise HTTPException(status_code=404, detail="Item not found")
 
 
 @router.get('/lists/{list_id}/items', response_model=List[ItemSerializer], response_model_by_alias=False)
