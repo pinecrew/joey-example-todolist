@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 import aiofiles
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, Request, HTTPException, Depends
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
@@ -10,6 +10,19 @@ from .serializers import TodoListSerializer, TodoListCreate, ItemSerializer, Ite
 from .auth import login as auth_login, logout as auth_logout
 
 router = APIRouter()
+
+
+async def get_user(request: Request):
+    id = request.scope.get('user')
+    try:
+        user = await User.objects.get(id=id)
+        return user
+    except User.DoesNotExist:
+        pass
+    return None
+
+
+RequestUser = lambda: Depends(get_user)
 
 
 class Credentials(BaseModel):
@@ -41,24 +54,21 @@ async def index():
 
 
 @router.get('/lists', response_model=List[TodoListSerializer], response_model_by_alias=False)
-async def lists(request: Request):
-    user = request.scope.get('user')
+async def lists(user=RequestUser()):
     return await TodoList.objects.filter(owner=user).all()
 
 
 @router.post('/lists', response_model=TodoListSerializer, response_model_by_alias=False)
-async def new_list(lst: TodoListCreate, request: Request):
-    user = request.scope.get('user')
+async def new_list(lst: TodoListCreate, user=RequestUser()):
     if lst.owner is None and user:
         lst.owner = user.id
     return await lst.save()
 
 
 @router.get('/lists/{list_id}', response_model=TodoListSerializer, response_model_by_alias=False)
-async def list_(list_id: int, request: Request):
-    user = request.scope.get('user')
+async def list_(list_id: int, user=RequestUser()):
     try:
-        return await TodoList.objects.get(id=list_id, owner=user)
+        return await TodoList.objects.get(id=list_id, owner=user.id)
     except TodoList.DoesNotExist:
         raise HTTPException(status_code=404, detail="Item not found")
 
